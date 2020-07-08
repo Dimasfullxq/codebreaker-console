@@ -18,7 +18,7 @@ module GameEnding
 
   def check_the_final_answers(answer, message)
     case answer
-    when Console::EXIT_COMMAND then leave_the_game
+    when EXIT_COMMAND then leave_the_game
     when 'y' then true
     when 'n' then false
     else wrong_format(message)
