@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/Dimasfullxq/codebreaker-gem
+  revision: 3b5e24a32b391899bce5a2372cba3b82e0db2daf
+  branch: develop
+  specs:
+    codebreaker (0.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -83,6 +90,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  codebreaker!
   fasterer
   rspec (~> 3.7)
   rubocop
