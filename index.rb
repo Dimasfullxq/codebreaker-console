@@ -4,6 +4,6 @@ require_relative 'config/uploader'
 
 puts 'Welcome to the Codebreaker Game!'
 console = Console.new
-game = console.choose_option { gets.chomp }
+game = console.choose_option
 system('clear')
 console.start(game)

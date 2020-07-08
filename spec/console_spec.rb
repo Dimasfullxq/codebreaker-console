@@ -3,7 +3,11 @@
 RSpec.describe Console do
   include MenuOptions
   let(:console) { described_class.new }
-  let(:game) { Codebreaker::Game.new(Codebreaker::Player.new('Dima'), :easy) }
+  let(:game) { Codebreaker::Game.new(Codebreaker::Player.new('Dima'), 'easy') }
+
+  before do
+    allow($stdout).to receive(:write)
+  end
 
   describe '.initialize' do
     it 'has options field' do
@@ -11,35 +15,57 @@ RSpec.describe Console do
     end
 
     it 'options is a String' do
-      expect(console.instance_variable_get(:@options).class).to eq(String)
+      expect(console.options.class).to eq(String)
     end
   end
 
   describe '#choose_option' do
+    it 'creates game object' do
+      allow(console).to receive(:gets).and_return('start', 'Dima', 'easy')
+      allow(console).to receive(:create_player).and_return(Codebreaker::Player.new('Dima'))
+      expect(console.choose_option.class).to eq(Codebreaker::Game)
+    end
+
+    it 'rescues ShortNameError' do
+      allow(console).to receive(:gets).and_return('start', 'Di', 'easy')
+      expect(console).to receive(:alert_input_error).with(Codebreaker::ShortNameError)
+      console.choose_option
+    end
+
+    it 'rescues LongNameError' do
+      allow(console).to receive(:gets).and_return('start', 'VeryBigNameforThisGame', 'easy')
+      expect(console).to receive(:alert_input_error).with(Codebreaker::LongNameError)
+      console.choose_option
+    end
+
+    it 'rescues WrongCommandError to choose correct difficulty' do
+      allow(console).to receive(:gets).and_return('start', 'Dimon', 'easyyyyyyyy')
+      expect(console).to receive(:alert_input_error).with(Codebreaker::WrongCommandError)
+      console.choose_option
+    end
+
     it 'leaves the game' do
-      expect(console).to receive(:leave_the_game)
-      console.choose_option { 'exit' }
+      allow(console).to receive(:gets).and_return('exit')
+      expect(console).to receive(:exit).with(true)
+      console.choose_option
     end
 
-    it 'shows rules' do
-      expect(console).to receive(:show_rules)
-      console.choose_option { 'rules' }
+    it 'shows game rules' do
+      allow(console).to receive(:gets).and_return('rules', 'exit')
+      expect(console).to receive(:exit).with(true)
+      console.choose_option
     end
 
-    it 'starts the game' do
-      expect(console).to receive(:registrate_game)
-      console.choose_option { 'start' }
+    it 'shows game stats' do
+      allow(console).to receive(:gets).and_return('stats', 'exit')
+      expect(console).to receive(:exit).with(true)
+      console.choose_option
     end
 
-    it 'show stats' do
-      allow(console).to receive(:show_stats)
-      console.choose_option { 'stats' }
-      expect(console).to have_received(:show_stats)
-    end
-
-    it 'raises wrong command' do
-      console.choose_option { '1234' }
-      expect(console).to receive(:wrong_command)
+    it 'prompts to enter correct command' do
+      allow(console).to receive(:gets).and_return('hello', 'exit')
+      expect(console).to receive(:exit).with(true)
+      console.choose_option
     end
   end
 end

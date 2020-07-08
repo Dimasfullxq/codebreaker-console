@@ -12,12 +12,12 @@ module GameConfiguration
   include MenuOptions
   include Input
 
+  private
+
   def registrate_game
     system('clear')
     create_game(create_player)
   end
-
-  private
 
   def win(game, result)
     return unless result.to_i == game.secret_code

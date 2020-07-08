@@ -18,7 +18,7 @@ class Console
 
   def choose_option
     print @options
-    select_option(yield)
+    select_option(gets.chomp)
   end
 
   def start(game)

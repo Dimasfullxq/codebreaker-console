@@ -18,19 +18,19 @@ module MenuOptions
     puts '***' * 50
     puts File.open('rules.txt', 'r').read
     puts '***' * 50
-    choose_option { gets.chomp }
+    choose_option
   end
 
   def show_stats
     system('clear')
     stats = create_table(sorted_stats)
     stats.size.times { |i| puts "Rating: #{i + 1}\n#{stats[i]}\n#{'***' * 50}" }
-    choose_option { gets.chomp }
+    choose_option
   end
 
   def wrong_command
     raise Codebreaker::WrongCommandError
   rescue Codebreaker::WrongCommandError => e
-    alert_input_error(e) { choose_option { gets.chomp } }
+    alert_input_error(e) { choose_option }
   end
 end
