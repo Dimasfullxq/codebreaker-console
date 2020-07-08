@@ -38,5 +38,4 @@ workflows:
   build:
     jobs:
       - lintering
-          requires:
-            - lintering
+
