@@ -5,7 +5,7 @@ RSpec.describe Console do
   let(:game) { Codebreaker::Game.new(Codebreaker::Player.new('Dima'), 'easy') }
 
   before do
-    # allow($stdout).to receive(:write)
+    allow($stdout).to receive(:write)
     game.instance_variable_set(:@attempts, 1)
   end
 
