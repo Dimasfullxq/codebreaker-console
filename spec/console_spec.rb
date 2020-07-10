@@ -19,7 +19,7 @@ RSpec.describe Console do
   end
 
   describe '#choose_option' do
-    it 'creates game object' do
+    it 'creates a game object' do
       allow(console).to receive(:gets).and_return('start', 'Dima', 'easy')
       allow(console).to receive(:create_player).and_return(Codebreaker::Player.new('Dima'))
       expect(console.choose_option.class).to eq(Codebreaker::Game)
