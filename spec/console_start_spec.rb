@@ -18,9 +18,9 @@ RSpec.describe Console do
 
     it 'wins the game' do
       game.instance_variable_set(:@secret_code, 1234)
-      allow(console).to receive(:gets).and_return('1234', 'n')
+      allow(console).to receive(:gets).and_return('1234')
       allow(console).to receive(:finish).with(GameEnding::START_NEW_GAME_MESSAGE, game)
-      expect(console).to receive(:finish)
+      expect(console).to receive(:win)
       console.start(game)
     end
 
