@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Console do
-  include MenuOptions
   let(:console) { described_class.new }
   let(:game) { Codebreaker::Game.new(Codebreaker::Player.new('Dima'), 'easy') }
 
@@ -51,18 +50,36 @@ RSpec.describe Console do
     end
 
     it 'shows game rules' do
+      allow(console).to receive(:gets).and_return('rules')
+      expect(console).to receive(:show_rules)
+      console.choose_option
+    end
+
+    it 'leaves the game after rules' do
       allow(console).to receive(:gets).and_return('rules', 'exit')
       expect(console).to receive(:exit).with(true)
       console.choose_option
     end
 
     it 'shows game stats' do
+      allow(console).to receive(:gets).and_return('stats')
+      expect(console).to receive(:show_stats)
+      console.choose_option
+    end
+
+    it 'leaves the game after' do
       allow(console).to receive(:gets).and_return('stats', 'exit')
       expect(console).to receive(:exit).with(true)
       console.choose_option
     end
 
     it 'prompts to enter correct command' do
+      allow(console).to receive(:gets).and_return('hello')
+      expect(console).to receive(:wrong_command)
+      console.choose_option
+    end
+
+    it 'leaves the game after wrong command' do
       allow(console).to receive(:gets).and_return('hello', 'exit')
       expect(console).to receive(:exit).with(true)
       console.choose_option
