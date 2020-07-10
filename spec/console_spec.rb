@@ -67,7 +67,7 @@ RSpec.describe Console do
       console.choose_option
     end
 
-    it 'leaves the game after' do
+    it 'leaves the game after stats' do
       allow(console).to receive(:gets).and_return('stats', 'exit')
       expect(console).to receive(:exit).with(true)
       console.choose_option
