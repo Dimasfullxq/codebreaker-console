@@ -12,7 +12,7 @@ RSpec.describe Console do
   describe '#start' do
     it 'loses the game' do
       allow(console).to receive(:gets).and_return('1234')
-      expect(console).to receive(:finish)
+      expect(console).to receive(:lose)
       console.start(game)
     end
 
