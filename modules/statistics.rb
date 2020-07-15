@@ -15,11 +15,11 @@ module Statistics
   end
 
   def group_by_hints
-    group_by_difficulty.flat_map { |_key, stat| stat.group_by { |field| field[:hints_used] } }
+    group_by_difficulty.flat_map { |_, stat| stat.group_by { |field| field[:hints_used] } }
   end
 
   def sorted_stats
-    group_by_hints.map { |hash| hash.map { |_key, stat| stat.sort_by { |field| field[:attempts_used] } } }.flatten
+    group_by_hints.map { |hash| hash.map { |_, stat| stat.sort_by { |field| field[:attempts_used] } } }.flatten
   end
 
   def create_table(stats)
