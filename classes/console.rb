@@ -26,7 +26,7 @@ class Console
     while game.attempts.positive?
       guess = enter_guess(game)
       check = check_set(game, guess)
-      check.is_a?(String) ? puts(check) : puts("Your hint: #{check}")
+      check.instance_of?(String) ? puts(check) : puts("Your hint: #{check}")
       win(game, guess)
     end
     lose(game)
