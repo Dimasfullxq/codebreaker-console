@@ -1,22 +1,16 @@
 # frozen_string_literal: true
 
-# game ending
-module GameEnding
-  YES_ANSWER = 'y'
-  NO_ANSWER = 'n'
-  SAVE_RESULTS_MESSAGE = "Do you want to save results ? #{YES_ANSWER}/#{NO_ANSWER}"
-  START_NEW_GAME_MESSAGE = "Do you want to start new game ? #{YES_ANSWER}/#{NO_ANSWER}"
-  WRONG_FORMAT_MESSAGE = "Put only '#{YES_ANSWER}'(YES) or '#{NO_ANSWER}'(NO)"
-
+# game ending entity
+class Finisher
   include Input
-
-  private
 
   def continue?(message)
     puts message + "\nAnswer: "
     answer = gets.chomp
     check_the_final_answers(answer, message)
   end
+
+  private
 
   def check_the_final_answers(answer, message)
     case answer

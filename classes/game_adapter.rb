@@ -1,30 +1,33 @@
 # frozen_string_literal: true
 
-# game config
-module GameConfiguration
-  WIN_MESSAGE = "Congratulations! You won! \nSecret code: "
-  LOSE_MESSAGE = "You have no attempts left! You lost :(\nSecret code: "
+# game adapter entity
+class GameAdapter
   EXACT_MARKER = '+'
   WRONG_POSITION_MARKER = '-'
   EMPTY_MARKER = ' '
 
-  include GameEnding
-  include MenuOptions
   include Input
 
-  private
+  def initialize
+    @finisher = Finisher.new
+  end
 
-  def registrate_game
-    system('clear')
-    create_game(create_player)
+  def enter_guess(game)
+    guess = field_set("Attempts: #{game.attempts}\nHints: #{game.hints}\n" + GUESS_MESSAGE)
+    return guess if guess == HINT_COMMAND
+
+    Codebreaker::Game.validate_input(guess)
+    guess
+  rescue StandardError => e
+    alert_input_error(e) { enter_guess(game) }
   end
 
   def win(game, result)
     return unless result.to_i == game.secret_code
 
     puts WIN_MESSAGE + game.secret_code.to_s
-    stats = game.create_stats
-    game.save_results(GAME_RESULTS_FILE, stats) if continue?(SAVE_RESULTS_MESSAGE)
+    stat_service = Codebreaker::StatisticService.new(game, Statistics::GAME_RESULTS_FILE)
+    stat_service.save_results if @finisher.continue?(SAVE_RESULTS_MESSAGE)
     finish(START_NEW_GAME_MESSAGE, game)
   end
 
@@ -49,12 +52,12 @@ module GameConfiguration
   end
 
   def finish(message, game)
-    continue?(message) ? new_game(game) : leave_the_game
+    @finisher.continue?(message) ? new_game(game) : Console.leave_the_game
   end
 
   def new_game(game)
     system('clear')
     game = Codebreaker::Game.new(game.player, game.difficulty)
-    start(game)
+    Console.new(self).start(game)
   end
 end

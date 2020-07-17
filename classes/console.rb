@@ -2,45 +2,63 @@
 
 # console entity
 class Console
-  include MenuOptions
-  include GameConfiguration
   include Input
+  include Statistics
 
-  attr_reader :options
-
-  def initialize
-    @options = "Please choose and enter an option:
-    '#{START_COMMAND}' - to start the game,
-    '#{RULES_COMMAND}' -  to see the rules of the game
-    '#{STATS_COMMAND}' - to see stats
-    '#{EXIT_COMMAND}' - to leave the game\nYour answer:"
+  def initialize(game_adapter)
+    @game_adapter = game_adapter
   end
 
   def choose_option
-    print @options
-    select_option(gets.chomp)
+    select_option(field_set(OPTIONS))
   end
 
   def start(game)
     puts "Difficulty: #{game.difficulty}"
     while game.attempts.positive?
-      guess = enter_guess(game)
-      check = check_set(game, guess)
+      guess = @game_adapter.enter_guess(game)
+      check = @game_adapter.check_set(game, guess)
       check.instance_of?(String) ? puts(check) : puts("Your hint: #{check}")
-      win(game, guess)
+      @game_adapter.win(game, guess)
     end
-    lose(game)
+    @game_adapter.lose(game)
+  end
+
+  def self.leave_the_game
+    system('clear')
+    puts GOODBYE_MESSAGE
+    exit(true)
   end
 
   private
 
   def select_option(answer)
     case answer
-    when START_COMMAND then registrate_game
+    when START_COMMAND then start(Registrator.new.registrate_game)
     when RULES_COMMAND then show_rules
     when STATS_COMMAND then show_stats
-    when EXIT_COMMAND then leave_the_game
     else wrong_command
     end
+  end
+
+  def show_rules
+    system('clear')
+    puts '***' * 50
+    puts File.open('rules.txt', 'r').read
+    puts '***' * 50
+    choose_option
+  end
+
+  def show_stats
+    system('clear')
+    stats = create_table(sorted_stats)
+    stats.size.times { |i| puts "Rating: #{i + 1}\n#{stats[i]}\n#{'***' * 50}" }
+    choose_option
+  end
+
+  def wrong_command
+    raise Codebreaker::WrongCommandError
+  rescue Codebreaker::WrongCommandError => e
+    alert_input_error(e) { choose_option }
   end
 end
