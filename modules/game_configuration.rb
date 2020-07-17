@@ -4,9 +4,9 @@
 module GameConfiguration
   WIN_MESSAGE = "Congratulations! You won! \nSecret code: "
   LOSE_MESSAGE = "You have no attempts left! You lost :(\nSecret code: "
-  POSITIVE = '+'
-  NEGATIVE = '-'
-  NONE = ' '
+  EXACT_MARKER = '+'
+  WRONG_POSITION_MARKER = '-'
+  EMPTY_MARKER = ' '
 
   include GameEnding
   include MenuOptions
@@ -38,7 +38,8 @@ module GameConfiguration
   end
 
   def convert_check(check)
-    POSITIVE * check[:positive] + NEGATIVE * check[:negative] + NONE * check[:none]
+    EXACT_MARKER * check[:exect_hit] + WRONG_POSITION_MARKER * check[:wrong_position_hit] +
+      EMPTY_MARKER * check[:empty_hit]
   end
 
   def take_hint(game)

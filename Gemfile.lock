@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/Dimasfullxq/codebreaker-gem
-  revision: 8e7f080608b9b514a7db67b4b95660209704c162
+  revision: 3601540d2eaf8eb2f9e109e346513567261aedf9
   branch: develop
   specs:
     codebreaker (0.1.0)
