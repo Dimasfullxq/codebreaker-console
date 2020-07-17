@@ -34,7 +34,7 @@ module GameConfiguration
   end
 
   def check_set(game, guess)
-    guess == HINT_COMMAND ? take_hint(game) : convert_check(game.check_the_guess(guess.to_i.digits))
+    guess == HINT_COMMAND ? take_hint(game) : convert_check(game.check_the_guess(guess))
   end
 
   def convert_check(check)
