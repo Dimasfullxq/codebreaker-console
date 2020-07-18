@@ -25,6 +25,9 @@ commands:
             bundle exec rspec --format progress \
                               --out /tmp/test-results/rspec.xml \
                               $TEST_FILES
+      - store_artifacts:
+          path: ~/repo/coverage
+          destination: coverage      
   setup_environment:
     steps:
       - checkout
