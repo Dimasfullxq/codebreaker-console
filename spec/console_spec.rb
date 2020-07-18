@@ -3,86 +3,70 @@
 RSpec.describe Console do
   let(:console) { described_class.new }
   let(:game) { Codebreaker::Game.new(Codebreaker::Player.new('Dima'), 'easy') }
+  let(:game_adapter) { console.instance_variable_get(:@game_adapter) }
 
   before do
     allow($stdout).to receive(:write)
   end
 
   describe '.initialize' do
-    it 'has options field' do
-      expect(console.instance_variables.include?(:@options)).to be(true)
+    it 'has game_adapter field' do
+      expect(console.instance_variables.include?(:@game_adapter)).to be(true)
     end
 
-    it 'options is a String' do
-      expect(console.options.class).to eq(String)
+    it 'has registrator field' do
+      expect(console.instance_variables.include?(:@registrator)).to be(true)
+    end
+
+    it 'has registrator that is Registrator class' do
+      expect(console.instance_variable_get(:@registrator).class).to eq(Registrator)
+    end
+
+    it 'has game_adapter that is GameAdapter class' do
+      expect(console.instance_variable_get(:@game_adapter).class).to eq(GameAdapter)
+    end
+  end
+
+  describe '.leave_the_game' do
+    it 'leaves the game' do
+      expect(described_class).to receive(:exit).with(true)
+      described_class.leave_the_game
     end
   end
 
   describe '#choose_option' do
-    it 'creates a game object' do
-      allow(console).to receive(:gets).and_return('start', 'Dima', 'easy')
-      allow(console).to receive(:create_player).and_return(Codebreaker::Player.new('Dima'))
-      expect(console.choose_option.class).to eq(Codebreaker::Game)
-    end
-
-    it 'rescues ShortNameError' do
-      allow(console).to receive(:gets).and_return('start', 'Di', 'easy')
-      expect(console).to receive(:alert_input_error).with(Codebreaker::ShortNameError)
-      console.choose_option
-    end
-
-    it 'rescues LongNameError' do
-      allow(console).to receive(:gets).and_return('start', 'VeryBigNameforThisGame', 'easy')
-      expect(console).to receive(:alert_input_error).with(Codebreaker::LongNameError)
-      console.choose_option
-    end
-
-    it 'rescues WrongCommandError to choose correct difficulty' do
-      allow(console).to receive(:gets).and_return('start', 'Dimon', 'easyyyyyyyy')
-      expect(console).to receive(:alert_input_error).with(Codebreaker::WrongCommandError)
-      console.choose_option
-    end
-
-    it 'leaves the game' do
-      allow(console).to receive(:gets).and_return('exit')
-      expect(console).to receive(:exit).with(true)
-      console.choose_option
-    end
-
-    it 'shows game rules' do
+    it 'shows game rules and closes app when repeat is turned off' do
+      console.instance_variable_set(:@repeat, false)
       allow(console).to receive(:gets).and_return('rules')
-      expect(console).to receive(:show_rules)
-      console.choose_option
+      expect(console.choose_option.class).to eq(NilClass)
     end
 
-    it 'leaves the game after rules' do
-      allow(console).to receive(:gets).and_return('rules', 'exit')
-      expect(console).to receive(:exit).with(true)
-      console.choose_option
-    end
-
-    it 'shows game stats' do
+    it 'shows stats and closes app when repeat is turned of' do
+      console.instance_variable_set(:@repeat, false)
       allow(console).to receive(:gets).and_return('stats')
-      expect(console).to receive(:show_stats)
+      expect(console.choose_option.class).to eq(NilClass)
+    end
+
+    it 'registrates game' do
+      allow(console).to receive(:gets).and_return('start')
+      expect(console.instance_variable_get(:@registrator)).to receive(:registrate_game)
       console.choose_option
     end
 
-    it 'leaves the game after stats' do
-      allow(console).to receive(:gets).and_return('stats', 'exit')
-      expect(console).to receive(:exit).with(true)
-      console.choose_option
+    it 'prompts to enter correct command if wrong command entered' do
+      console.instance_variable_set(:@repeat, false)
+      allow(console).to receive(:gets).and_return('startttt', 'stats')
+      expect(console.choose_option.class).to eq(NilClass)
     end
+  end
 
-    it 'prompts to enter correct command' do
-      allow(console).to receive(:gets).and_return('hello')
-      expect(console).to receive(:wrong_command)
-      console.choose_option
-    end
+  describe '#start' do
+    before { game.instance_variable_set(:@attempts, 1) }
 
-    it 'leaves the game after wrong command' do
-      allow(console).to receive(:gets).and_return('hello', 'exit')
-      expect(console).to receive(:exit).with(true)
-      console.choose_option
+    it 'loses the game' do
+      allow(game_adapter).to receive(:gets).and_return('1234')
+      expect(game_adapter).to receive(:lose)
+      console.start(game)
     end
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # input module
-module Input
+module InputService
   START_COMMAND = 'start'
   RULES_COMMAND = 'rules'
   STATS_COMMAND = 'stats'
@@ -19,12 +19,14 @@ module Input
                        "or enter '#{EXIT_COMMAND}' to leave the game: "
   GUESS_MESSAGE = "Enter '#{EXIT_COMMAND}' to leave the game, '#{HINT_COMMAND}' to take a hint.\n" \
                   'Enter your guess of code: '
+  YOUR_HINT = 'Your hint:'
+  YOUR_DIFFICULTY = 'Difficulty:'
   WIN_MESSAGE = "Congratulations! You won! \nSecret code: "
   LOSE_MESSAGE = "You have no attempts left! You lost :(\nSecret code: "
   YES_ANSWER = 'y'
   NO_ANSWER = 'n'
-  SAVE_RESULTS_MESSAGE = "Do you want to save results ? #{YES_ANSWER}/#{NO_ANSWER}"
-  START_NEW_GAME_MESSAGE = "Do you want to start new game ? #{YES_ANSWER}/#{NO_ANSWER}"
+  SAVE_RESULTS_MESSAGE = "Do you want to save results ? #{YES_ANSWER}/#{NO_ANSWER} "
+  START_NEW_GAME_MESSAGE = "Do you want to start new game ? #{YES_ANSWER}/#{NO_ANSWER} "
   WRONG_FORMAT_MESSAGE = "Put only '#{YES_ANSWER}'(YES) or '#{NO_ANSWER}'(NO)"
 
   private

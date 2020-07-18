@@ -2,7 +2,7 @@
 
 # registrator entity
 class Registrator
-  include Input
+  include InputService
 
   def registrate_game
     system('clear')

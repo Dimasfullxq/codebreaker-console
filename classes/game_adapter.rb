@@ -6,9 +6,10 @@ class GameAdapter
   WRONG_POSITION_MARKER = '-'
   EMPTY_MARKER = ' '
 
-  include Input
+  include InputService
 
-  def initialize
+  def initialize(console)
+    @console = console
     @finisher = Finisher.new
   end
 
@@ -26,8 +27,8 @@ class GameAdapter
     return unless result.to_i == game.secret_code
 
     puts WIN_MESSAGE + game.secret_code.to_s
-    stat_service = Codebreaker::StatisticService.new(game, Statistics::GAME_RESULTS_FILE)
-    stat_service.save_results if @finisher.continue?(SAVE_RESULTS_MESSAGE)
+    stat_service = Codebreaker::StatisticService.new(game, StatisticSorter::GAME_RESULTS_FILE)
+    stat_service.save_results if @finisher.agree?(SAVE_RESULTS_MESSAGE)
     finish(START_NEW_GAME_MESSAGE, game)
   end
 
@@ -39,6 +40,8 @@ class GameAdapter
   def check_set(game, guess)
     guess == HINT_COMMAND ? take_hint(game) : convert_check(game.check_the_guess(guess))
   end
+
+  private
 
   def convert_check(check)
     EXACT_MARKER * check[:exect_hit] + WRONG_POSITION_MARKER * check[:wrong_position_hit] +
@@ -52,12 +55,12 @@ class GameAdapter
   end
 
   def finish(message, game)
-    @finisher.continue?(message) ? new_game(game) : Console.leave_the_game
+    @finisher.agree?(message) ? new_game(game) : Console.leave_the_game
   end
 
   def new_game(game)
     system('clear')
     game = Codebreaker::Game.new(game.player, game.difficulty)
-    Console.new(self).start(game)
+    @console.start(game)
   end
 end
