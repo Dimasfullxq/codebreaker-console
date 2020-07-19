@@ -1,0 +1,12 @@
+require:
+   - rubocop-performance
+   - rubocop-rspec
+
+AllCops:
+  NewCops: enable
+Layout/LineLength:
+  Max: 120
+RSpec/MessageSpies:
+  EnforcedStyle: receive
+Metrics/BlockLength:
+  ExcludedMethods: ['describe', 'context']
