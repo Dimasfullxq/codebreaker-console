@@ -3,7 +3,6 @@
 require 'codebreaker'
 require 'yaml'
 require_relative '../modules/input_service'
-require_relative '../classes/statistic_sorter'
 require_relative '../classes/finisher'
 require_relative '../classes/registrator'
 require_relative '../classes/game_adapter'

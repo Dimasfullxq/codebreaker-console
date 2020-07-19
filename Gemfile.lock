@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/Dimasfullxq/codebreaker-gem
-  revision: 478cb9daf9a1f39d8da027d4e977507f505be52a
+  revision: 0d9b6985aa755fa777b5d46b9b7231772162396d
   branch: develop
   specs:
     codebreaker (0.1.0)
@@ -53,7 +53,7 @@ GEM
       rubocop-ast (>= 0.1.0, < 1.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 2.0)
-    rubocop-ast (0.1.0)
+    rubocop-ast (0.2.0)
       parser (>= 2.7.0.1)
     rubocop-performance (1.7.1)
       rubocop (>= 0.82.0)

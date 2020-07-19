@@ -27,8 +27,8 @@ class GameAdapter
     return unless result.to_i == game.secret_code
 
     puts WIN_MESSAGE + game.secret_code.to_s
-    stat_service = Codebreaker::StatisticService.new(game, StatisticSorter::GAME_RESULTS_FILE)
-    stat_service.save_results if @finisher.agree?(SAVE_RESULTS_MESSAGE)
+    stat_service = Codebreaker::StatisticService.new(Console::GAME_RESULTS_FILE)
+    stat_service.save_results(game) if @finisher.agree?(SAVE_RESULTS_MESSAGE)
     finish(START_NEW_GAME_MESSAGE, game)
   end
 
@@ -44,7 +44,7 @@ class GameAdapter
   private
 
   def convert_check(check)
-    EXACT_MARKER * check[:exect_hit] + WRONG_POSITION_MARKER * check[:wrong_position_hit] +
+    EXACT_MARKER * check[:exact_hit] + WRONG_POSITION_MARKER * check[:wrong_position_hit] +
       EMPTY_MARKER * check[:empty_hit]
   end
 

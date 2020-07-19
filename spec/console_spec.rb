@@ -41,10 +41,10 @@ RSpec.describe Console do
       expect(console.choose_option.class).to eq(NilClass)
     end
 
-    it 'shows stats and closes app when repeat is turned of' do
+    it 'shows stats and returns integer when repeat is turned off' do
       console.instance_variable_set(:@repeat, false)
       allow(console).to receive(:gets).and_return('stats')
-      expect(console.choose_option.class).to eq(NilClass)
+      expect(console.choose_option.class).to eq(Integer)
     end
 
     it 'registrates game' do
@@ -55,7 +55,14 @@ RSpec.describe Console do
 
     it 'prompts to enter correct command if wrong command entered' do
       console.instance_variable_set(:@repeat, false)
-      allow(console).to receive(:gets).and_return('startttt', 'stats')
+      allow(console).to receive(:gets).and_return('startttt', 'rules')
+      expect(console.choose_option.class).to eq(NilClass)
+    end
+
+    it 'rescues error if file with stats does not exists' do
+      console.instance_variable_set(:@repeat, false)
+      console.instance_variable_set(:@statistic_service, Codebreaker::StatisticService.new('res.yml'))
+      allow(console).to receive(:gets).and_return('stats')
       expect(console.choose_option.class).to eq(NilClass)
     end
   end

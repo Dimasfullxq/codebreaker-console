@@ -2,12 +2,13 @@
 
 # console entity
 class Console
+  GAME_RESULTS_FILE = 'results.yml'
   include InputService
 
   def initialize
     @game_adapter = GameAdapter.new(self)
     @registrator = Registrator.new
-    @stats_sorter = StatisticSorter.new
+    @statistic_service = Codebreaker::StatisticService.new(GAME_RESULTS_FILE)
     @repeat = true
   end
 
@@ -53,10 +54,11 @@ class Console
 
   def show_stats
     system('clear')
-    stats = @stats_sorter.show_stats
-    if stats.instance_of?(String) then puts stats
-    else stats.size.times { |i| puts "Rating: #{i + 1}\n#{stats[i]}\n#{'***' * 50}" }
-    end
+    stats = @statistic_service.show_results
+    stats.size.times { |i| puts "Rating: #{i + 1}\n#{stats[i]}\n#{'***' * 50}" }
+  rescue StandardError => e
+    puts e.message
+  ensure
     choose_option if @repeat
   end
 
