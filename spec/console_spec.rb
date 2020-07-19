@@ -2,12 +2,11 @@
 
 RSpec.describe Console do
   let(:console) { described_class.new }
-  let(:game) { Codebreaker::Game.new(Codebreaker::Player.new('Dima'), 'easy') }
+  let(:player) { Codebreaker::Player.new('Dima') }
+  let(:game) { Codebreaker::Game.new(player, 'easy') }
   let(:game_adapter) { console.instance_variable_get(:@game_adapter) }
 
-  before do
-    allow($stdout).to receive(:write)
-  end
+  before { allow($stdout).to receive(:write) }
 
   describe '.initialize' do
     it 'has game_adapter field' do
@@ -35,6 +34,16 @@ RSpec.describe Console do
   end
 
   describe '#choose_option' do
+    before do
+      file = File.open('res.yml', 'w')
+      data = [{ player: player, difficulty: :easy, attempts_total: 15,
+                attempts_used: 10, hints_total: 2, hints_used: 1 }]
+      file.write(data.to_yaml)
+      file.close
+    end
+
+    after { File.delete('res.yml') }
+
     it 'shows game rules and closes app when repeat is turned off' do
       console.instance_variable_set(:@repeat, false)
       allow(console).to receive(:gets).and_return('rules')
@@ -42,6 +51,7 @@ RSpec.describe Console do
     end
 
     it 'shows stats and returns integer when repeat is turned off' do
+      console.instance_variable_set(:@statistic_service, Codebreaker::StatisticService.new('res.yml'))
       console.instance_variable_set(:@repeat, false)
       allow(console).to receive(:gets).and_return('stats')
       expect(console.choose_option.class).to eq(Integer)
@@ -61,7 +71,7 @@ RSpec.describe Console do
 
     it 'rescues error if file with stats does not exists' do
       console.instance_variable_set(:@repeat, false)
-      console.instance_variable_set(:@statistic_service, Codebreaker::StatisticService.new('res.yml'))
+      console.instance_variable_set(:@statistic_service, Codebreaker::StatisticService.new('res1.yml'))
       allow(console).to receive(:gets).and_return('stats')
       expect(console.choose_option.class).to eq(NilClass)
     end
